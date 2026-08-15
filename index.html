@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مفاجأة</title>
+    <style>
+        /* إعدادات الصفحة والخلفية */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000; /* لون الخلفية أسود */
+            font-family: Arial, sans-serif; /* نوع الخط */
+            overflow: hidden; 
+            position: relative;
+        }
+
+        /* تنسيق النص اللي في الخلفية */
+        .background-text {
+            position: absolute;
+            z-index: 1; /* رقم 1 يعني يكون بالطبقة اللي ورا */
+            color: rgba(255, 255, 255, 0.3); /* لون أبيض شفاف عشان ما يغطي على الصورة */
+            font-size: 6vw; /* حجم الخط يتغير حسب حجم الشاشة */
+            font-weight: bold;
+            text-align: center;
+            user-select: none; /* يمنع تحديد النص */
+        }
+
+        /* تنسيق الصورة */
+        img {
+            position: relative;
+            z-index: 2; /* رقم 2 يعني الصورة تكون فوق النص */
+            max-width: 100%;
+            max-height: 100vh;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- النص اللي في الخلفية -->
+    <div class="background-text">شوف يا رازن</div>
+
+    <!-- الصورة المباشرة من الرابط اللي أرسلته -->
+    <img src="https://i.postimg.cc/McCsbRvv/d771d4f267da4f54a1cc3ccc07570a2d.webp" alt="صورة">
+
+</body>
+</html>
+
