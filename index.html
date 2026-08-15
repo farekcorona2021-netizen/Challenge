@@ -1,88 +1,109 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Update...</title>
+    <title>System Loading...</title>
     <style>
-        body { 
-            background-color: black; 
-            color: #0f0; /* لون أخضر مثل الهاكرز */
-            font-family: 'Courier New', Courier, monospace; 
-            padding: 20px; 
-            font-size: 1.2rem; 
+        body {
+            background-color: #000;
+            color: #0f0; /* لون أخضر هاكرز */
+            font-family: monospace;
+            font-size: 7px; /* الخط صغير عشان تطلع تفاصيل وجه ليون واضحة */
+            line-height: 7px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
             overflow: hidden;
         }
-        #cursor { 
-            animation: blink 1s infinite; 
-        }
-        @keyframes blink { 
-            0%, 100% { opacity: 1; } 
-            50% { opacity: 0; } 
-        }
-        .hidden { 
-            display: none; 
-        }
-        .troll-container {
-            text-align: center;
-            margin-top: 30vh;
-        }
-        .troll-msg { 
-            color: red; 
-            font-size: 3rem; 
-            font-weight: bold; 
-        }
-        .sub-msg {
-            color: white;
-            font-size: 1.5rem;
-            margin-top: 10px;
+        pre {
+            margin: 0;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div id="console"></div><span id="cursor">_</span>
-    
-    <div id="troll-container" class="hidden troll-container">
-        <div class="troll-msg">تم سحب الأيبي بنجاح! 😈</div>
-        <div class="sub-msg">جهزوا نفسكم للجلد، وسلم لي على رانكك أنت وياه 😂</div>
-    </div>
+    <!-- هنا بتنطبع الرسمة -->
+    <pre id="ascii-art">جارِ سحب البيانات وفك التشفير...</pre>
+
+    <!-- حطينا رابط صورتك مع بروكسي عشان المتصفح يسمح لنا نقرا ألوانها برمجياً -->
+    <img id="source-image" crossorigin="anonymous" src="https://api.allorigins.win/raw?url=https://i.postimg.cc/McCsbRvv/d771d4f267da4f54a1cc3ccc07570a2d.webp" style="display: none;">
+    <canvas id="canvas" style="display: none;"></canvas>
 
     <script>
-        // الجمل اللي تطلع كأنها اختراق
-        const texts = [
-            "Connecting to local server...",
-            "Bypassing device firewall...",
-            "Extracting IP address...",
-            "Accessing PlayStation Network credentials...",
-            "Downloading browser history...",
-            "Downgrading Rocket League rank to Bronze...",
-            "Uploading all data to Fares's Server...",
-            "Done! 100%"
-        ];
-        
-        let i = 0;
-        const consoleDiv = document.getElementById("console");
-        const trollContainer = document.getElementById("troll-container");
-        const cursor = document.getElementById("cursor");
+        window.onload = function() {
+            const img = document.getElementById('source-image');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const asciiArt = document.getElementById('ascii-art');
 
-        function typeText() {
-            if (i < texts.length) {
-                consoleDiv.innerHTML += texts[i] + "<br><br>";
-                i++;
-                // سرعة ظهور الجمل (1500 يعني ثانية ونص)
-                setTimeout(typeText, 1500);
-            } else {
-                setTimeout(() => {
-                    consoleDiv.innerHTML = "";
-                    cursor.style.display = "none";
-                    trollContainer.classList.remove("hidden");
-                }, 1000);
+            // ترتيب الحروف من الفاضي (للأماكن المظلمة) إلى الغامق (للأماكن الفاتحة في وجه ليون)
+            const chars = [' ', '.', ':', '-', '=', '+', '*', '#', '%', '8', '@'];
+
+            img.onload = function() {
+                asciiArt.innerHTML = ''; // نمسح رسالة التحميل
+
+                // العرض 120 بيكسل (كل ما زاد الرقم زادت التفاصيل بس كبرت الرسمة)
+                const width = 150; 
+                const height = Math.floor((img.height / img.width) * width * 0.55);
+
+                canvas.width = width;
+                canvas.height = height;
+
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                let imageData;
+                try {
+                    imageData = ctx.getImageData(0, 0, width, height);
+                } catch(e) {
+                    asciiArt.innerHTML = "SYSTEM ERROR: ACCESS DENIED";
+                    return;
+                }
+
+                const data = imageData.data;
+                let asciiString = '';
+
+                // تحويل البيكسلات إلى كود
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    
+                    const brightness = (r + g + b) / 3;
+                    const charIndex = Math.floor((brightness / 255) * (chars.length - 1));
+                    asciiString += chars[charIndex];
+
+                    if (((i / 4) + 1) % width === 0) {
+                        asciiString += '\n';
+                    }
+                }
+
+                const lines = asciiString.split('\n');
+                let currentLine = 0;
+
+                // دالة رسم سطر ورا سطر (الأنيميشن)
+                function typeLine() {
+                    if (currentLine < lines.length) {
+                        asciiArt.innerHTML += lines[currentLine] + '\n';
+                        currentLine++;
+                        setTimeout(typeLine, 15); // سرعة الطباعة (تقدر تصغر الرقم عشان يسرع)
+                    } else {
+                        setTimeout(() => {
+                            asciiArt.innerHTML += '\n\n[SYSTEM OVERRIDE] - Leon S. Kennedy Has Infiltrated Your Device. 🔫😎';
+                        }, 500);
+                    }
+                }
+
+                typeLine();
+            };
+
+            if (img.complete) {
+                img.onload();
             }
-        }
-        
-        // يبدأ المقلب بعد ثانية من فتح الموقع
-        setTimeout(typeText, 1000);
+        };
     </script>
 </body>
 </html>
