@@ -3,51 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مفاجأة</title>
+    <title>System Update...</title>
     <style>
-        /* إعدادات الصفحة والخلفية */
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #000; /* لون الخلفية أسود */
-            font-family: Arial, sans-serif; /* نوع الخط */
-            overflow: hidden; 
-            position: relative;
+        body { 
+            background-color: black; 
+            color: #0f0; /* لون أخضر مثل الهاكرز */
+            font-family: 'Courier New', Courier, monospace; 
+            padding: 20px; 
+            font-size: 1.2rem; 
+            overflow: hidden;
         }
-
-        /* تنسيق النص اللي في الخلفية */
-        .background-text {
-            position: absolute;
-            z-index: 1; /* رقم 1 يعني يكون بالطبقة اللي ورا */
-            color: rgba(255, 255, 255, 0.3); /* لون أبيض شفاف عشان ما يغطي على الصورة */
-            font-size: 6vw; /* حجم الخط يتغير حسب حجم الشاشة */
-            font-weight: bold;
+        #cursor { 
+            animation: blink 1s infinite; 
+        }
+        @keyframes blink { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0; } 
+        }
+        .hidden { 
+            display: none; 
+        }
+        .troll-container {
             text-align: center;
-            user-select: none; /* يمنع تحديد النص */
+            margin-top: 30vh;
         }
-
-        /* تنسيق الصورة */
-        img {
-            position: relative;
-            z-index: 2; /* رقم 2 يعني الصورة تكون فوق النص */
-            max-width: 100%;
-            max-height: 100vh;
-            object-fit: contain;
+        .troll-msg { 
+            color: red; 
+            font-size: 3rem; 
+            font-weight: bold; 
+        }
+        .sub-msg {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- النص اللي في الخلفية -->
-    <div class="background-text">شوف يا رازن</div>
+    <div id="console"></div><span id="cursor">_</span>
+    
+    <div id="troll-container" class="hidden troll-container">
+        <div class="troll-msg">تم سحب الأيبي بنجاح! 😈</div>
+        <div class="sub-msg">جهزوا نفسكم للجلد، وسلم لي على رانكك أنت وياه 😂</div>
+    </div>
 
-    <!-- الصورة المباشرة من الرابط اللي أرسلته -->
-    <img src="https://i.postimg.cc/McCsbRvv/d771d4f267da4f54a1cc3ccc07570a2d.webp" alt="صورة">
+    <script>
+        // الجمل اللي تطلع كأنها اختراق
+        const texts = [
+            "Connecting to local server...",
+            "Bypassing device firewall...",
+            "Extracting IP address...",
+            "Accessing PlayStation Network credentials...",
+            "Downloading browser history...",
+            "Downgrading Rocket League rank to Bronze...",
+            "Uploading all data to Fares's Server...",
+            "Done! 100%"
+        ];
+        
+        let i = 0;
+        const consoleDiv = document.getElementById("console");
+        const trollContainer = document.getElementById("troll-container");
+        const cursor = document.getElementById("cursor");
 
+        function typeText() {
+            if (i < texts.length) {
+                consoleDiv.innerHTML += texts[i] + "<br><br>";
+                i++;
+                // سرعة ظهور الجمل (1500 يعني ثانية ونص)
+                setTimeout(typeText, 1500);
+            } else {
+                setTimeout(() => {
+                    consoleDiv.innerHTML = "";
+                    cursor.style.display = "none";
+                    trollContainer.classList.remove("hidden");
+                }, 1000);
+            }
+        }
+        
+        // يبدأ المقلب بعد ثانية من فتح الموقع
+        setTimeout(typeText, 1000);
+    </script>
 </body>
 </html>
-
